@@ -1,0 +1,20 @@
+{
+    "serverPort": 3000,
+    "database": {
+        "name": "",
+        "host": "",
+        "port": 3306,
+        "username": "",
+        "password": ""
+    },
+    "log": {
+        "service": {
+            "level": "info",
+            "path": "logs/service/board_service_log"
+        },
+        "error": {
+            "level": "error",
+            "path": "logs/error/board_error_log"
+        }
+    }
+}
