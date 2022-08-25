@@ -15,15 +15,16 @@ import Config from '../config/config.json';
 import * as log  from './utils/logger.util';
 log.initialize(Config);
 
+import { createPool } from './utils/database.util';
+createPool();
+
 
 const app = new Koa();
 const router = new Router();
 const port: number = Config.serverPort;
 
-
 // koa bodyParser setting
 app.use(bodyParser());
-
 
 // koa router setting
 app.use(router.routes());

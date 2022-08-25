@@ -1,7 +1,7 @@
 {
     "serverPort": 3000,
     "database": {
-        "name": "board",
+        "name": "service",
         "host": "rds-board-database.cymexrpl0w43.ap-northeast-2.rds.amazonaws.com",
         "port": 3306,
         "username": "admin",

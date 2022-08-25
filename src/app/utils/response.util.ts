@@ -1,5 +1,5 @@
 // vo
-import { ResponseVO, ResponseBodyVO } from "../model/response.vo";
+import { ResponseVO, ResponseBodyVO } from "../model/vo/response.vo";
 
 // common
 import { StatusCode } from "../common/statuscode";
