@@ -14,7 +14,7 @@ import { Request } from "koa";
 export class ResponseUtil {
   
     // 200
-    static success(request: Request, file: string, name: string, data?: string): ResponseVO {
+    static success(request: Request, file: string, name: string, data: any): ResponseVO {
       const result = new Result(200, StatusCode.CODE_200_000, StatusCode.DESC_200_000, data);
       const response = result.body();  
       common.httpResponseLog(file, name, request, response, false)

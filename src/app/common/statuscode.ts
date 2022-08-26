@@ -17,4 +17,7 @@ export class StatusCode {
     
     static CODE_500_001: string = "500-001"; 
     static DESC_500_001: string = "Database Connection Error";
+
+    static CODE_500_002: string = "500-002"; 
+    static DESC_500_002: string = "Database Insert Error (a foreign key constraint fails)";
 }

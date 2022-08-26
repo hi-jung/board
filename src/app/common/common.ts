@@ -1,12 +1,25 @@
 // npm
 import dayjs from 'dayjs'
 import { Request } from 'koa';
+import { Paging } from '../model/vo/request.vo';
 import { ResponseVO } from '../model/vo/response.vo';
 
 // log
 import { logger } from '../utils/logger.util';
 
-
+/**
+ * Comment: offset, limit 을 return
+ * Date: 2022.08.26
+ * @param page parameter로 넘겨받은 page
+ * @param viewCount parameter로 넘겨받은 viewCount
+ * @returns Paging
+ */
+ export const getPaging = (page: number, viewCount: number): Paging => {
+    return {
+        offset: (page -1) * viewCount,
+        limit: viewCount
+    }
+}
 
 /**
  * Comment: Null, undefined check
@@ -93,20 +106,20 @@ export const getStoptime = (starttime) => {
     }
 
     if (errorType) {
-        logger.error('============================================================');
-        logger.error(`time: ${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}`);
-        logger.error(`file: '${file}'`);
+        logger.error('========================================================================================================================');
+        logger.error(`         time: ${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}`);
+        logger.error(`         file: '${file}'`);
         logger.error(`function name: '${func}'`);
-        logger.error(`Request: '${JSON.stringify(requestInfo)}'`);
-        logger.error(`Response: '${JSON.stringify(response)}'`);
-        logger.error('============================================================');
+        logger.error(`      Request: '${JSON.stringify(requestInfo)}'`);
+        logger.error(`     Response: '${JSON.stringify(response)}'`);
+        logger.error('========================================================================================================================');
     } else {
-        logger.info('============================================================');
-        logger.info(`time: ${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}`);
-        logger.info(`file: '${file}'`);
+        logger.info('========================================================================================================================');
+        logger.info(`         time: ${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}`);
+        logger.info(`         file: '${file}'`);
         logger.info(`function name: '${func}'`);
-        logger.info(`Request: '${JSON.stringify(requestInfo)}'`);
-        logger.info(`Response: '${JSON.stringify(response)}'`);
-        logger.info('============================================================');
+        logger.info(`      Request: '${JSON.stringify(requestInfo)}'`);
+        logger.info(`     Response: '${JSON.stringify(response)}'`);
+        logger.info('========================================================================================================================');
     }
 };
