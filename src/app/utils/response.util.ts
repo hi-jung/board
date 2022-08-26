@@ -3,6 +3,8 @@ import { ResponseVO, ResponseBodyVO } from "../model/vo/response.vo";
 
 // common
 import { StatusCode } from "../common/statuscode";
+import * as common from '../common/common'
+import { Request } from "koa";
 
 
 /**
@@ -12,39 +14,50 @@ import { StatusCode } from "../common/statuscode";
 export class ResponseUtil {
   
     // 200
-    static success(body: ResponseBodyVO): ResponseVO {
-      const result = new Result(200, body.code, body.codeDesc, body.data);
-      return result.body();
+    static success(request: Request, file: string, name: string, data?: string): ResponseVO {
+      const result = new Result(200, StatusCode.CODE_200_000, StatusCode.DESC_200_000, data);
+      const response = result.body();  
+      common.httpResponseLog(file, name, request, response, false)
+      return response;
     }
 
     // 400
-    static badRequestError(message: string): ResponseVO {
+    static badRequestError(request: Request, message: string, file: string, name: string): ResponseVO {
       const result = new Result(200, StatusCode.CODE_400_000, `${StatusCode.DESC_400_000}${message === "" ? "" : `(${message})`}`, {});
       const response = result.body();  
+      common.httpResponseLog(file, name, request, response, true)
       return response;
     }
 
     // 405
-    static methodNotAllowed(message: string): ResponseVO {
+    static methodNotAllowed(request: Request, message: string, file: string, name: string): ResponseVO {
       const result = new Result(200, StatusCode.CODE_405_000, `${StatusCode.DESC_405_000}${message === "" ? "" : `(${message})`}`, {});  
-      return result.body();
+      const response = result.body();  
+      common.httpResponseLog(file, name, request, response, true)
+      return response;
     }
 
     // 408
-    static timeout(message: string): ResponseVO {
+    static timeout(request: Request, message: string, file: string, name: string): ResponseVO {
       const result = new Result(200, StatusCode.CODE_408_000, `${StatusCode.DESC_408_000}${message === "" ? "" : `(${message})`}`, {});
-      return result.body();
+      const response = result.body();  
+      common.httpResponseLog(file, name, request, response, true)
+      return response;
     }
 
     // 500
-    static internalServerError(data: Object, message: string): ResponseVO {
+    static internalServerError(request: Request, data: Object, message: string, file: string, name: string): ResponseVO {
       const result = new Result(200, StatusCode.CODE_500_000, `${StatusCode.DESC_500_000}${message === "" ? "" : `(${message})`}`, data);  
-      return result.body();
+      const response = result.body();  
+      common.httpResponseLog(file, name, request, response, true)
+      return response;
     }
 
-    static error(body: ResponseBodyVO): ResponseVO {
+    static error(request: Request, body: ResponseBodyVO, file: string, name: string): ResponseVO {
       const result = new Result(200, body.code, body.codeDesc, body.data);
-      return result.body();
+      const response = result.body();  
+      common.httpResponseLog(file, name, request, response, true)
+      return response;
     }
 
 }

@@ -1,12 +1,12 @@
 
 // entity
 import dayjs from 'dayjs';
+// entity
 import {TbBoard} from '../model/entities/TbBoard';
-
 // vo
 import { Board } from '../model/vo/board.vo';
+// util
 import { query } from '../utils/database.util';
-
 // logger
 import { logger } from '../utils/logger.util';
 
@@ -135,6 +135,6 @@ export const update = async (board: Board) => {
         }
     } catch (e) {
         const error: any = e;
-        logger.error(`[srvc] board.service.ts - update FAIL!!, Error code: ${error.code}, message: ${error.message}`)
+        logger.error(`[srvc] board.service.ts - delete FAIL!!, Error code: ${error.code}, message: ${error.message}`)
     }
 }
