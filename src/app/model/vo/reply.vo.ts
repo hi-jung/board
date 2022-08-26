@@ -6,4 +6,5 @@ export interface Reply {
     content: string;
     depth: number;
     parentId: number;
+    reComment?: Array<Reply>;
 }

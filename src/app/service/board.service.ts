@@ -12,6 +12,8 @@ import { ResponseBodyVO } from '../model/vo/response.vo';
 import { query } from '../utils/database.util';
 // logger
 import { logger } from '../utils/logger.util';
+// common
+import * as common from '../common/common'
 
 
 /**
@@ -23,12 +25,22 @@ import { logger } from '../utils/logger.util';
 export const select = async (board: Board, paging: Paging): Promise<ResponseBodyVO> => {
     try {
         let where ='';
+        if (!common.isNull(board.title) && board.title !== '') {
+            where += `WHERE TB_TITLE LIKE '%${board.title}%'`
+        }
+        if (!common.isNull(board.username) && board.username !== '') {
+            let str = where === '' ? `WHERE TB_USERNAME LIKE '%${board.username}%'` : ` OR TB_TITLE LIKE '%${board.username}%'`
+            console.log(str)
+            where += str;
+        }
+
         const selectStr = `SELECT 
                                 TB_ID,
                                 TB_USERNAME,
                                 TB_TITLE,
                                 TB_CONTENT,
-                                TB_REGIST_DATE
+                                TB_REGIST_DATE,
+                                TB_UPDATE_DATE
                               FROM
                                 TB_BOARD
                               ${where}
@@ -38,6 +50,7 @@ export const select = async (board: Board, paging: Paging): Promise<ResponseBody
         console.log(selectStr)
         const res = await query(selectStr, []);
         return res;
+
     } catch (e) {
         const error: any = e;
         logger.error(`[srvc] board.service.ts - select FAIL!!, Error code: ${error.code}, message: ${error.message}`)

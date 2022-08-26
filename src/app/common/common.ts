@@ -1,7 +1,7 @@
 // npm
 import dayjs from 'dayjs'
 import { Request } from 'koa';
-import { Paging } from '../model/vo/request.vo';
+import { Paging, SearchParam } from '../model/vo/request.vo';
 import { ResponseVO } from '../model/vo/response.vo';
 
 // log
@@ -11,13 +11,19 @@ import { logger } from '../utils/logger.util';
  * Comment: offset, limit 을 return
  * Date: 2022.08.26
  * @param page parameter로 넘겨받은 page
- * @param viewCount parameter로 넘겨받은 viewCount
+ * @param viewCount parameter로 넘겨받은 viewCount (default: 10)
  * @returns Paging
  */
  export const getPaging = (page: number, viewCount: number): Paging => {
+    let count = 10;
+    if (viewCount === undefined || viewCount === null || isNaN(viewCount)) {
+        count = 10
+    } else {
+        count = viewCount
+    }
     return {
-        offset: (page -1) * viewCount,
-        limit: viewCount
+        offset: (page -1) * count,
+        limit: count
     }
 }
 

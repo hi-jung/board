@@ -6,6 +6,7 @@ import * as boardService from '../service/board.service'
 import * as common from '../common/common'
 import { ResponseUtil } from '../utils/response.util';
 import { StatusCode } from '../common/statuscode';
+import { Board } from '../model/vo/board.vo';
 
 
 /**
@@ -17,23 +18,46 @@ export const list = async (ctx: Context) => {
     let response;
     const query: any = ctx.request.query;
 
-    if (query.page < 1) {
+    if (query.page < 1 || common.isNull(query.page)) {
         response = ResponseUtil.badRequestError(ctx.request, `'page'는 1 이상 이어야 합니다.`, 'board.controller.ts', 'list');
         ctx.response.status = response.statusCode;
         ctx.body = response.body;
         return;
     }
-
-    const paging = common.getPaging(parseInt(query.page), parseInt(query.viewCount));
-    const result = await boardService.select(query, paging);
+    
+    // 1) 게시물 조회
+    const result = await getBoardList(query);
     if (result.code === StatusCode.CODE_200_000) {
-        response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'list', result);
+        response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'list', result.data);
     } else {
         response = ResponseUtil.error(ctx.request, result, 'board.controller.ts', 'list')
     }
     ctx.response.status = response.statusCode;
     ctx.body = response.body;
     return;
+}
+
+const getBoardList = async (query: any) => {
+    const paging = common.getPaging(parseInt(query.page), parseInt(query.viewCount));
+    const boardResult = await boardService.select(query, paging);
+    if (boardResult.code !== StatusCode.CODE_200_000) {
+        return boardResult;
+    }
+
+    let boarList: Array<Board> = [];
+    for (let i = 0; i < boardResult.data.length; i++) {
+        const board: Board = {
+            tbId: boardResult.data[i].TB_ID,
+            username: boardResult.data[i].TB_USERNAME,
+            title: boardResult.data[i].TB_TITLE,
+            content: boardResult.data[i].TB_CONTENT,
+            registDate: boardResult.data[i].TB_REGIST_DATE,
+            updateDate: boardResult.data[i].TB_UPDATE_DATE
+        }
+        boarList.push(board);
+    }
+    boardResult.data = boarList;
+    return boardResult;
 }
 
 

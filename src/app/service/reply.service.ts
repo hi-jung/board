@@ -22,9 +22,12 @@ import { Paging } from '../model/vo/request.vo';
  * @param reply Reply
  * @returns result
  */
- export const select = async (reply: Reply, paging: Paging): Promise<ResponseBodyVO> => {
+ export const select = async (reply: Reply, depth: number, paging?: Paging): Promise<ResponseBodyVO> => {
     try {
-        let where ='';
+        let limit = ''
+        if (!common.isNull(paging)) {
+            limit = `LIMIT ${paging?.offset},${paging?.limit}`
+        }
         const selectStr = `SELECT 
                                 TR_ID,
                                 TB_ID,
@@ -34,14 +37,18 @@ import { Paging } from '../model/vo/request.vo';
                                 TR_DEPTH,
                                 TR_PARENT_ID
                               FROM
-                                TB_BOARD
-                              ${where}
+                                TB_REPLY
+                              WHERE TB_ID = ? AND TR_DEPTH = ?
                               ORDER BY TR_ID ASC
-                              LIMIT ${paging.offset},${paging.limit}
-        `;
+                              ${limit}`;
         console.log(selectStr)
-        const res = await query(selectStr, []);
+        const selectParam = [
+            reply.tbId,
+            depth
+        ]
+        const res = await query(selectStr, selectParam);
         return res;
+
     } catch (e) {
         const error: any = e;
         logger.error(`[srvc] reply.service.ts - select FAIL!!, Error code: ${error.code}, message: ${error.message}`)
