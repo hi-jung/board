@@ -98,6 +98,7 @@ export const regist = async (ctx: Context) => {
         return;
     }
     
+    // 1) 게시글 등록
     const result = await boardService.insert(body);
     if (result.code === StatusCode.CODE_200_000) {
         response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'regist', {});
@@ -120,7 +121,8 @@ export const regist = async (ctx: Context) => {
 const keywordCheck = (content: string) => {
     /**
      * 추후 구현 예정
-     * 1) 게시글 등록시 키워드 체크를 위해 키워드 체크만 하는 서버로 이벤트 전송 (ex. mqtt)
+     * 1) 게시글 등록시 키워드 체크를 위해 키워드 체크만 하는 서버로 이벤트 전송 
+     *      - ex. rabbitMQ or pub/sub 등 사용
      * 2) 키워드 체크 후 푸쉬를 발송하는 서버에서 키워드 체크 후 푸쉬 발송
      */
 }
@@ -133,6 +135,8 @@ const keywordCheck = (content: string) => {
 export const update = async (ctx: Context) => {
     let response;
     const body = ctx.request.body;
+
+    // 1) 게시글 수정
     const result = await boardService.update(body);
     if (result.code === StatusCode.CODE_200_000) {
         response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'update', {});
@@ -152,6 +156,8 @@ export const update = async (ctx: Context) => {
 export const remove = async (ctx: Context) => {
     let response;
     const body = ctx.request.body;
+
+    // 1) 게시글 삭제
     const result = await boardService.remove(body);
     if (result.code === StatusCode.CODE_200_000) {
         response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'remove', {});
