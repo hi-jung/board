@@ -7,6 +7,7 @@ import * as common from '../common/common'
 import { ResponseUtil } from '../utils/response.util';
 import { StatusCode } from '../common/statuscode';
 import { Board } from '../model/vo/board.vo';
+import { logger } from '../utils/logger.util';
 
 
 /**
@@ -96,10 +97,18 @@ export const regist = async (ctx: Context) => {
         ctx.body = response.body;
         return;
     }
-
+    
     const result = await boardService.insert(body);
     if (result.code === StatusCode.CODE_200_000) {
         response = ResponseUtil.success(ctx.request, 'board.controller.ts', 'regist', {});
+
+        // !!) 키워드 체크
+        try {
+            keywordCheck(body.content);
+        } catch(e) {
+            // keyword 체크시 오류 발생하더라도 게시글 등록은 정상적으로 이루어져야 함
+            logger.error(e)
+        }
     } else {
         response = ResponseUtil.error(ctx.request, result, 'board.controller.ts', 'regist')
     }
@@ -108,6 +117,13 @@ export const regist = async (ctx: Context) => {
     return;
 }
 
+const keywordCheck = (content: string) => {
+    /**
+     * 추후 구현 예정
+     * 1) 게시글 등록시 키워드 체크를 위해 키워드 체크만 하는 서버로 이벤트 전송 (ex. mqtt)
+     * 2) 키워드 체크 후 푸쉬를 발송하는 서버에서 키워드 체크 후 푸쉬 발송
+     */
+}
 
 /**
  * Comment: 게시물 수정 (비밀번호가 같을 경우에만 수정 가능)
